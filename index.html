@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="fi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Colle Nobile – Tilaus 2025</title>
+
+<style>
+:root { --accent: rgb(184,174,91); }
+body {
+  font-family: system-ui, -apple-system, Roboto, sans-serif;
+  margin: 0; background: #f5f5f3; color: #222;
+  display: flex; justify-content: center; padding: 20px;
+}
+.wrap {
+  background: #fff; max-width: 560px; width: 100%;
+  padding: 20px; border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+h1 {
+  margin: 0 0 20px 0; color: var(--accent);
+  font-size: 22px; text-align: center;
+}
+h2 {
+  margin-top: 22px; color: var(--accent);
+  font-size: 18px; border-bottom: 1px solid var(--accent);
+  padding-bottom: 4px;
+}
+
+.product {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid #eee;
+}
+.counter {
+  display: flex; gap: 6px; align-items: center;
+}
+.counter button {
+  width: 28px; height: 28px; border-radius: 6px;
+  border: 1px solid var(--accent); background: var(--accent);
+  color: #fff; font-size: 16px; cursor: pointer;
+}
+.counter span {
+  width: 22px; text-align: center; display: inline-block;
+}
+
+.summary {
+  margin-top: 30px; border-top: 2px solid var(--accent);
+  padding-top: 14px;
+}
+.summary-item {
+  display: flex; justify-content: space-between;
+  margin: 4px 0;
+}
+.subtotal {
+  font-weight: bold; text-align: right; margin-top: 10px;
+}
+label { font-weight: 600; display: block; margin-top: 18px; }
+input, textarea {
+  width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px;
+  margin-top: 6px;
+}
+
+.primary {
+  background: var(--accent); color: #fff;
+  border: 0; padding: 12px; border-radius: 8px;
+  width: 100%; font-size: 16px; margin-top: 22px;
+}
+
+footer {
+  text-align: center; font-size: 13px; color: #777; margin-top: 26px;
+}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <h1>Colle Nobile – ryhmätilaus 2025</h1>
+  <p>
+  
+  <h3>Tilausohje</h3>
+  <p>Tutustu tuotteisiin ja hinnastoon tarkemmin liitteenä olevassa esitteessä. Esitteestä on myös tekoälykäännös suomeksi.</p>
+  <p>Lisää haluamasi tuotteet alla ja tarkista sivun alareunan yhteenvedosta, että määrät ovat oikein. Toimitusosoite-kenttään voi laittaa kotiosoitteen, mutta sen voi myös jättää tyhjäksi. Öljyt toimitetaan ennen joulua, joko suoraan ovelle tai välikäsien kautta.</p>
+  <p>HUOM. Lähetä tilaus -nappi avaa sähköpostiohjelman ja uuden viestin, jossa on kaikki tiedot valmiina. Vastaanottajan osoite on "hue-proton-4d@icloud.com", tämä on alias joka ohjautuu minulle. Eli kyseessä ei ole oikea verkkokauppa, vaan lomake vain helpottaa tilauksen laatimista. Kuittaan vastaanotetun tilauksen vastaamalla sähköpostiin, ja annan samalla puhelinnumeroni lisäkysymyksiä yms. varten.</p>
+  <p><b>Lähetä tilauksesi viimeistään su 23.11.2025</b>, jotta saan tilauksen ajoissa eteenpäin siten, että öljyt ehtivät Suomeen hyvissä ajoin jouluksi.</p>
+  <h3>Toimituskulut</h3>
+  <p>Tavaran lähettäminen Italiasta kuriirilla maksaa yllättävän paljon. Toisaalta tuotteet tulevat suoraan viljelijältä ilman välikäsiä.</p>
+  <p>Lähetyskulut määrittyvät luonnollisesti ryhmätilauksen koon ja painon mukaan, ja toimituskulut jyvitetään alustavasti siten, että kullekin tilaajalle tulee 10 euron perusmaksu, ja sen päälle painon mukaan jyvitetty lisämaksu. Ennen lopullisen tilauksen lähettämistä viljelijälle, ilmoitan kullekin suuntaa-antavat lähetyskustannukset, jolloin määriä voi halutessaan vielä muokata.</p>
+  <p>Nuutti</p>
+  <a href="/files/02_listino_collenobile2025web_compressed">Colle Nobile - prodotti 2025 (IT)</a><br>
+  <a href="/files/colle_nobile_hinnasto.pdf">Tuotteet ja hinnasto (FI)</a>
+  <div id="products"></div>
+
+  <div class="summary">
+    <h2>Yhteenveto</h2>
+    <div id="summary-list"></div>
+    <div class="subtotal">Yhteensä: <span id="subtotal">0,00 €</span></div>
+  </div>
+
+  <label>Nimi *</label>
+  <input id="name" required />
+
+  <label>Toimitusosoite</label>
+  <input id="address" />
+
+  <label>Lisätiedot</label>
+  <textarea id="notes"></textarea>
+
+  <button class="primary" id="send-order">Lähetä tilaus</button>
+
+  <footer>Colle Nobile © 2025</footer>
+</div>
+
+<script>
+// ---------- Tuotedata ----------
+// ---------- Tuotedata ryhmitelty ja lajiteltu ----------
+const PRODUCT_GROUPS = [
+  {
+    title: "Leccino",
+    items: [
+      { id:'leccino-075', name:'Leccino 0,75 L lasipullo', price:17 },
+      { id:'leccino-050', name:'Leccino 0,50 L lasipullo', price:14 },
+      { id:'leccino-025', name:'Leccino 0,25 L lasipullo', price:10 },
+      { id:'leccino-010', name:'Leccino 0,10 L lasipullo', price:5 },
+      { id:'kanisteri-5l-leccino', name:'Leccino 5 L kanisteri', price:80 },
+      { id:'kanisteri-3l-leccino', name:'Leccino 3 L kanisteri', price:48 }
+    ]
+  },
+  {
+    title: "Raggia",
+    items: [
+      { id:'raggia-075', name:'Raggia 0,75 L lasipullo', price:19 },
+      { id:'raggia-050', name:'Raggia 0,50 L lasipullo', price:15 },
+      { id:'raggia-025', name:'Raggia 0,25 L lasipullo', price:10 },
+      { id:'raggia-010', name:'Raggia 0,10 L lasipullo', price:5 },
+      { id:'kanisteri-5l-raggia', name:'Raggia 5 L kanisteri', price:90 },
+      { id:'kanisteri-3l-raggia', name:'Raggia 3 L kanisteri', price:54 }
+    ]
+  },
+  {
+    title: "Mignola",
+    items: [
+      { id:'mignola-075', name:'Mignola 0,75 L lasipullo', price:22 },
+      { id:'mignola-050', name:'Mignola 0,50 L lasipullo', price:18 },
+      { id:'mignola-025', name:'Mignola 0,25 L lasipullo', price:12 },
+      { id:'mignola-010', name:'Mignola 0,10 L lasipullo', price:5 },
+      { id:'kanisteri-5l-mignola', name:'Mignola 5 L kanisteri', price:95 },
+      { id:'kanisteri-3l-mignola', name:'Mignola 3 L kanisteri', price:57 }
+    ]
+  },
+  {
+    title: "Rosciola",
+    items: [
+      { id:'rosciola-075', name:'Rosciola 0,75 L lasipullo', price:22 },
+      { id:'rosciola-050', name:'Rosciola 0,50 L lasipullo', price:18 },
+      { id:'rosciola-025', name:'Rosciola 0,25 L lasipullo', price:12 },
+      { id:'rosciola-010', name:'Rosciola 0,10 L lasipullo', price:5 },
+      { id:'kanisteri-5l-rosciola', name:'Rosciola 5 L kanisteri', price:95 },
+      { id:'kanisteri-3l-rosciola', name:'Rosciola 3 L kanisteri', price:57 }
+    ]
+  },
+  {
+    title: "Maistelupakkaukset",
+    items: [
+      { id: 'cofanetto-cartone', name: 'Kartonkirasia: 3 × 0,10 L Rosciola, Raggia, Mignola', price:22 },
+      { id: 'cofanetto-cartone', name: 'Puurasia: 3 × 0,10 L Rosciola, Raggia, Mignola', price:25 }
+      ]
+  },
+  {
+    title: "Maustetut öljyt",
+    items: [
+      { id:'limone-025', name:'Sitruuna 0,25 L lasipullo', price:10 },
+      { id:'basilico-025', name:'Basilika 0,25 L lasipullo', price:10 },
+      { id:'rosmarino-025', name:'Rosmariini 0,25 L lasipullo', price:10 },
+      { id:'peperoncino-025', name:'Chili 0,25 L lasipullo', price:10 }
+      ]
+  },
+  {
+    title: "Muut tuotteet",
+    items: [
+      { id:'praline-12', name:'Pralinet 12 kpl', price:12 },
+      { id:'biscotti-200', name:'Biscotti 200 g', price:5 },
+      { id:'olea-cioc', name:'Suklaalevite Leccino-öljyllä', price:9 },
+      { id:'infuso-60', name:'Yrttitee 60 g metallipurkki (oliiviöljyn lehdet, omena, sitronella)', price:9 },
+      { id:'refill-100', name:'Yrttitee täyttöpakkaus 100 g', price:9 },
+      { id:'soap-100', name:'Saippua 100 g', price:3 }
+    ]
+  }
+];
+
+let cart = {};
+
+// ---------- Rakennetaan UI ----------
+function buildUI(){
+  const container = document.getElementById('products');
+  PRODUCT_GROUPS.forEach(group=>{
+    const section = document.createElement('div');
+    section.innerHTML = `<h2>${group.title}</h2>`;
+    
+    group.items.forEach(p=>{
+      cart[p.id] = 0;
+
+      section.innerHTML += `
+        <div class="product">
+          <div>${p.name}<br><small>${p.price.toFixed(2)} €</small></div>
+          <div class="counter">
+            <button data-id="${p.id}" data-op="minus">–</button>
+            <span id="qty-${p.id}">0</span>
+            <button data-id="${p.id}" data-op="plus">+</button>
+          </div>
+        </div>`;
+    });
+    container.appendChild(section);
+  });
+
+  document.querySelectorAll('.counter button').forEach(btn=>{
+    btn.onclick = () => {
+      const id = btn.dataset.id;
+      const op = btn.dataset.op;
+      if(op === "plus") cart[id] = Math.min(5, cart[id] + 1);
+      if(op === "minus") cart[id] = Math.max(0, cart[id] - 1);
+      updateView();
+    }
+  });
+}
+
+function findProduct(id) {
+  for (const group of PRODUCT_GROUPS) {
+    const product = group.items.find(item => item.id === id);
+    if (product) return product;
+  }
+  return null;
+}
+
+
+function updateView(){
+  Object.keys(cart).forEach(id=>{
+    document.getElementById(`qty-${id}`).innerText = cart[id];
+  });
+  const summary = document.getElementById("summary-list");
+  summary.innerHTML = "";
+  let sum=0;
+
+  Object.entries(cart).forEach(([id,q])=>{
+    if(q>0){
+      const p = findProduct(id);
+      const line = q * p.price;
+      sum += line;
+      summary.innerHTML += `
+        <div class="summary-item">
+          <div>${p.name} × ${q}</div>
+          <div>${line.toFixed(2)} €</div>
+        </div>`;
+    }
+  });
+
+  document.getElementById("subtotal").innerText = sum.toFixed(2) + " €";
+}
+
+
+
+// ---------- Mailto lähetys ----------
+document.getElementById('send-order').onclick=()=>{
+  const name = document.getElementById('name').value.trim();
+  const address = document.getElementById('address').value.trim();
+  const notes = document.getElementById('notes').value.trim();
+
+  if(!name){
+    alert("Anna nimesi.");
+    return;
+  }
+
+  const ordered = Object.entries(cart).filter(([id,q])=>q>0);
+  if(!ordered.length){
+    alert("Ostoskori on tyhjä.");
+    return;
+  }
+
+  let body = `Nimi: ${name}\nOsoite: ${address}\n\nTilatut tuotteet:\n`;
+  let sum = 0;
+
+  ordered.forEach(([id,q])=>{
+    const p = findProduct(id);
+    const line = q*p.price;
+    sum+=line;
+    body += `- ${p.name} × ${q} = ${line.toFixed(2)} €\n`;
+  });
+
+  body += `\nYhteensä: ${sum.toFixed(2)} €\n`;
+  if(notes) body += `\nLisätiedot: ${notes}\n`;
+
+  const mailto = `mailto:hue-proton-4d@icloud.com?subject=${encodeURIComponent("Oliiviöljytilaus 2025")}&body=${encodeURIComponent(body)}`;
+  window.location.href = mailto;
+};
+
+// init
+buildUI();
+updateView();
+</script>
+
+</body>
+</html>
